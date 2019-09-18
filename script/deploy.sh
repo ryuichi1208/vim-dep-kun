@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apt install -y bc
+sudo apt install -y bc
 
 GIT_CMD=$(which git)
 GIT_SCHE="https://"
