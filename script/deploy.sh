@@ -16,8 +16,7 @@ ${GIT_CMD} config user.name ${GIT_USER}
 ${GIT_CMD} config user.email ${GIT_MAIL}
 
 GIT_OLD_TAG=$(cat tag)
-GIT_NEW_TAG=$(echo "${GIT_OLD_TAG} + 0.1" | bc)
-GIT_NEW_TAG=$(echo "%{GIT_OLD_TAG}" | awk '{print $1+0.1}')
+GIT_NEW_TAG=$(echo "${GIT_OLD_TAG}" | awk '{print $1+0.1}')
 
 sed -i -e "s/${GIT_OLD_TAG}/${GIT_NEW_TAG}/g" tag
 
