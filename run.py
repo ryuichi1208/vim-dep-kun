@@ -14,6 +14,11 @@ app = Flask(__name__)
 def index():
     return 'Hello World!'
 
+@app.route("/api/git")
+def git_push():
+    out = check_output(["bash", "./script/deploy.sh"])
+    return out
+
 
 @app.route("/api/commands")
 def exec_commands() -> str:
