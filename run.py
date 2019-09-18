@@ -18,8 +18,8 @@ def index():
 @app.route("/api/commands")
 def exec_commands() -> str:
     cmd_info = {
-        "git" : f"{check_output(['git', 'version'])}",
-        "python" : f"{check_output(['python3', '-V'])}"
+        "git" : f"{check_output(['git', 'version'])}".rstrip('\n'),
+        "python" : f"{check_output(['python3', '-V'])}".rstrip('\n')
     }
     return jsonify(cmd_info)
 
