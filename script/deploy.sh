@@ -6,10 +6,10 @@ GIT_USER="ryuichi1208"
 GIT_PASS="Abjlfhy31"
 GIT_REPO="vim-dep-kun"
 
-#${GIT_CMD} clone ${GIT_SCHE}${GIT_USER}:${GIT_PASS}@github.com/${GIT_USER}/${GIT_REPO}.git
-#ls -Rl
+${GIT_CMD} clone ${GIT_SCHE}${GIT_USER}:${GIT_PASS}@github.com/${GIT_USER}/${GIT_REPO}.git
+ls -Rl
 
-${GIT_CMD} remote set-url origin https://${GIT_USER}:${GIT_PASS}@github.com/${GIT_USER}/${GIT_REPO}.git
+cd ${GIT_REPO}
 
 GIT_OLD_TAG=$(cat tag)
 GIT_NEW_TAG=$(echo "${GIT_OLD_TAG} + 0.1" | bc)
