@@ -1,9 +1,5 @@
 #!/bin/bash
 
-apt update -y
-apt upgrade -y
-apt install -y bc
-
 GIT_CMD=$(which git)
 GIT_SCHE="https://"
 GIT_USER="ryuichi1208"
@@ -14,8 +10,6 @@ GIT_REPO="vim-dep-kun"
 ${GIT_CMD} clone ${GIT_SCHE}${GIT_USER}:${GIT_PASS}@github.com/${GIT_USER}/${GIT_REPO}.git
 ls -Rl
 
-uname -a
-
 cd ${GIT_REPO}
 
 ${GIT_CMD} config user.name ${GIT_USER}
@@ -23,6 +17,7 @@ ${GIT_CMD} config user.email ${GIT_MAIL}
 
 GIT_OLD_TAG=$(cat tag)
 GIT_NEW_TAG=$(echo "${GIT_OLD_TAG} + 0.1" | bc)
+GIT_NEW_TAG=$(echo "%{GIT_OLD_TAG}" | awk '{print $1+0.1}')
 
 sed -i -e "s/${GIT_OLD_TAG}/${GIT_NEW_TAG}/g" tag
 
