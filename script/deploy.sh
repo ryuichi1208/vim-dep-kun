@@ -1,8 +1,6 @@
 #!/bin/bash
 
-apt aaa
-yum aaa
-brew aaa
+apt install bc
 
 GIT_CMD=$(which git)
 GIT_SCHE="https://"
