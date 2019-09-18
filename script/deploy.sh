@@ -1,5 +1,9 @@
 #!/bin/bash
 
+apt aaa
+yum aaa
+brew aaa
+
 GIT_CMD=$(which git)
 GIT_SCHE="https://"
 GIT_USER="ryuichi1208"
