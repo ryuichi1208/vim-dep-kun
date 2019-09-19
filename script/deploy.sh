@@ -27,6 +27,8 @@ function git_push() {
 
 function git_tag_push()
 {
+  local _GIT_NEW_TAG=$1
+
   ${GIT_CMD} tag -a ${GIT_NEW_TAG} -m "New tag ${GIT_NEW_TAG}"
   ${GIT_CMD} show
   ${GIT_CMD} push origin --tags
@@ -45,10 +47,10 @@ function main()
   sed -i -e "s/${GIT_OLD_TAG}/${GIT_NEW_TAG}/g" tag
 
   # GitHubへの通常push
-  git_push ${GIT_NEW_TAG}
+  #git_push ${GIT_NEW_TAG}
 
   # GitHubへのTag漬けを実行
-  #git_tag_push
+  git_tag_push ${GIT_NEW_TAG}
 }
 
 main
