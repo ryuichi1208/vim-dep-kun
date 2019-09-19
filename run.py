@@ -32,7 +32,8 @@ def index():
 @auth.login_required
 def git_push():
     out = check_output(["bash", "./script/deploy.sh"])
-    result = {'a': 'b'}
+    print(out)
+    result = {'push': 'success'}
     return jsonify(result), 201
 
 

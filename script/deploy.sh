@@ -47,7 +47,7 @@ function main()
   sed -i -e "s/${GIT_OLD_TAG}/${GIT_NEW_TAG}/g" tag
 
   # GitHubへの通常push
-  #git_push ${GIT_NEW_TAG}
+  git_push ${GIT_NEW_TAG}
 
   # GitHubへのTag漬けを実行
   git_tag_push ${GIT_NEW_TAG}
