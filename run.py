@@ -11,13 +11,20 @@ from subprocess import check_output
 from flask import Flask, jsonify, Response, render_template, request
 from flask_httpauth import HTTPBasicAuth, HTTPDigestAuth
 
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage
+
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False
 app.config["SECRET_KEY"] = "aaa"
-
 auth = HTTPDigestAuth()
-
 ACCEPTED_IP = ["127.0.0.1", "192.168.1.1/24"]
+
+line_bot_api = LineBotApi(
+    "lkhSX1pn6kyKtrk//snn2eHR7Bsx6Owy6RxoImxpLr0vQjCixFk5qwnKlGfdmAUxLFOq4KdIqa5onNuVkrKquEnlzSAnKWvqVye66svW89MATemJGdEhDSl6HBiHbOe6Bk1D6I/d/7r9oVv2Eq8IhgdB04t89/1O/w1cDnyilFU="
+)
+handler = WebhookHandler("f00c4d7b3d94f2e3e7d53e5bfe98f0e4")
 
 
 @auth.get_password
@@ -109,6 +116,31 @@ def page_not_found(error):
     Error pages handler
     """
     return render_template("page_not_found.html"), 404
+
+
+@app.route("/callback", methods=['POST'])
+def callback():
+    # get X-Line-Signature header value
+    signature = request.headers['X-Line-Signature']
+
+    # get request body as text
+    body = request.get_data(as_text=True)
+    app.logger.info("Request body: " + body)
+
+    # handle webhook body
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        abort(400)
+
+    return 'OK'
+
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=event.message.text))
 
 
 if __name__ == "__main__":
