@@ -6,10 +6,13 @@ import os
 
 from subprocess import check_output
 from flask import Flask, jsonify
-from flask_httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPBasicAuth, HTTPDigestAuth
 
 app = Flask(__name__)
-auth = HTTPBasicAuth()
+app.config['JSON_AS_ASCII'] = False
+app.config['SECRET_KEY'] = "aaa"
+
+auth = HTTPDigestAuth()
 
 
 @auth.get_password
@@ -23,12 +26,12 @@ def do_basic_auth(id):
     return None
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return 'Hello World!'
 
 
-@app.route("/api/git")
+@app.route("/api/git", methods=['GET'])
 @auth.login_required
 def git_push():
     out = check_output(["bash", "./script/deploy.sh"])
@@ -37,7 +40,7 @@ def git_push():
     return jsonify(result), 201
 
 
-@app.route("/api/commands")
+@app.route("/api/commands", methods=['GET'])
 @auth.login_required
 def exec_commands() -> str:
     cmd_info = {
@@ -48,4 +51,5 @@ def exec_commands() -> str:
 
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', debug=True)
