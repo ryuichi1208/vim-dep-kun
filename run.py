@@ -56,13 +56,10 @@ def get_vim_latest_tag(num: int) -> str:
     """
     Get the latest tag from vim repository on GitHub.
     """
-    print(num)
     try:
-        num = request.args.get("num", 1, type=int)
+        num = request.args.get("num", type=int)
     except RuntimeError as e:
         print(e)
-
-    print(num)
 
     url = "https://api.github.com/repos/vim/vim/tags"
     req = urllib.request.Request(url)
@@ -139,6 +136,7 @@ def get_users():
 
 
 @app.errorhandler(404)
+@app.errorhandler(500)
 def page_not_found(error):
     """
     Error pages handler
