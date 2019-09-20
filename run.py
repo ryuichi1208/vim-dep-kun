@@ -8,7 +8,7 @@ import sys
 import urllib.request
 
 from subprocess import check_output
-from flask import Flask, jsonify, Response, render_template, request
+from flask import Flask, jsonify, Response, render_template, request, abort
 from flask_httpauth import HTTPBasicAuth, HTTPDigestAuth
 
 from linebot import LineBotApi, WebhookHandler
@@ -52,7 +52,7 @@ def index():
 
 
 @app.route("/api/repos/vim", methods=["GET"])
-def get_vim_latest_tag(num):
+def get_vim_latest_tag(num: int) -> str:
     """
     Get the latest tag from vim repository on GitHub.
     """
@@ -120,7 +120,6 @@ def callback():
 
     # get request body as text
     body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
 
     # handle webhook body
     try:
@@ -146,9 +145,7 @@ def page_not_found(error):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text="aaa")
-    )
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=get_vim_latest_tag(1)))
 
 
 if __name__ == "__main__":
