@@ -52,14 +52,15 @@ def index():
 
 
 @app.route("/api/repos/vim", methods=["GET"])
-def get_vim_latest_tag(num: int) -> str:
+def get_vim_latest_tag(num=1) -> str:
     """
     Get the latest tag from vim repository on GitHub.
     """
-    try:
-        num = request.args.get("num", type=int)
-    except RuntimeError as e:
-        print(e)
+    if request.args.get(num):
+        try:
+            num = request.args.get("num", type=int)
+        except RuntimeError as e:
+            print(e)
 
     url = "https://api.github.com/repos/vim/vim/tags"
     req = urllib.request.Request(url)
