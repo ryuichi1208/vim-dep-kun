@@ -141,12 +141,15 @@ def page_not_found(error):
     """
     Error pages handler
     """
-    return render_template("page_not_found.html"), 404
+    response = jsonify({"error": {"type": error.name, "message": error.description}})
+    return response, error.code
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=get_vim_latest_tag(10)))
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text=get_vim_latest_tag(10))
+    )
 
 
 if __name__ == "__main__":
