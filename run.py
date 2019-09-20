@@ -1,12 +1,14 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 
-import sys
-import os
 import datetime
+import json
+import os
+import sys
+import urllib.request
 
 from subprocess import check_output
-from flask import Flask, jsonify, Response, render_template
+from flask import Flask, jsonify, Response, render_template, request
 from flask_httpauth import HTTPBasicAuth, HTTPDigestAuth
 
 app = Flask(__name__)
@@ -15,9 +17,15 @@ app.config["SECRET_KEY"] = "aaa"
 
 auth = HTTPDigestAuth()
 
+ACCEPTED_IP = ["127.0.0.1", "192.168.1.1/24"]
+
 
 @auth.get_password
 def do_digest_auth(id):
+    """
+    A function that performs Digest authentication by comparing the
+    requested user name and password name with its own DB.
+    """
     id_list = {"admin": "admin", "testUser01": "testUser01"}
 
     if id in id_list:
@@ -27,14 +35,45 @@ def do_digest_auth(id):
 
 @app.route("/", methods=["GET"])
 def index():
+    """
+    Minimum function for operation check.
+    During the test, it is guaranteed to work by tapping here.
+    """
     resp = Response("Hello world")
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
 
 
-@app.route("/api/git", methods=["GET"])
+@app.route("/api/repos/vim", methods=["GET"])
+def get_vim_latest_tag():
+    """
+    Get the latest tag from vim repository on GitHub.
+    """
+    num = request.args.get("num", 1, type=int)
+
+    url = "https://api.github.com/repos/vim/vim/tags"
+    req = urllib.request.Request(url)
+
+    if num == 1:
+        with urllib.request.urlopen(req) as res:
+            latest_tag = json.load(res)[0]["name"]
+        return latest_tag + "\n"
+    elif num > 1:
+        latest_tags = ""
+        with urllib.request.urlopen(req) as res:
+            latest_tag = json.load(res)
+            for i in range(num):
+                latest_tags += latest_tag[i]["name"] + "\n"
+        return latest_tags
+
+
+@app.route("/api/deploy/git", methods=["GET"])
 @auth.login_required
 def git_push():
+    """
+    API endpoint for kicking off deployment to GitHub.
+    Deployment starts from here
+    """
     out = check_output(["bash", "./script/deploy.sh"])
     print(out)
     result = {"push": "success"}
@@ -42,9 +81,14 @@ def git_push():
     return jsonify(result), 201
 
 
-@app.route("/api/commands", methods=["GET"])
+@app.route("/api/__commands", methods=["GET"])
 @auth.login_required
 def exec_commands() -> str:
+    """
+    An endpoint for displaying different versions of commands such
+    as pip and git on each server.
+    If the operation is unstable, tap here to check.
+    """
     cmd_info = {
         "git": f"{check_output(['git', 'version'])}".rstrip("\n"),
         "python": f"{check_output(['python3', '-V'])}".rstrip("\n"),
@@ -53,6 +97,7 @@ def exec_commands() -> str:
     resp = Response(cmd_info)
 
     resp.headers["X-APP-VERSION"] = "1.0.0"
+    resp.headers["X-APP-NAME"] = "vim-dep-kun"
     resp.headers["X-APP-BUILD-DATE"] = datetime.date.today()
 
     return resp
@@ -60,6 +105,9 @@ def exec_commands() -> str:
 
 @app.errorhandler(404)
 def page_not_found(error):
+    """
+    Error pages handler
+    """
     return render_template("page_not_found.html"), 404
 
 
