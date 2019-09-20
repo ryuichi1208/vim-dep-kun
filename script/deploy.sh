@@ -17,7 +17,8 @@ function git_clone()
   ${GIT_CMD} config user.email ${GIT_MAIL}
 }
 
-function git_push() {
+function git_push()
+{
   local _GIT_NEW_TAG=$1
 
   ${GIT_CMD} add .
