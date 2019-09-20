@@ -56,6 +56,7 @@ def get_vim_latest_tag(num: int) -> str:
     """
     Get the latest tag from vim repository on GitHub.
     """
+    print(num)
     try:
         num = request.args.get("num", 1, type=int)
     except RuntimeError as e:
