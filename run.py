@@ -3,6 +3,7 @@
 
 import sys
 import os
+import datetime
 
 from subprocess import check_output
 from flask import Flask, jsonify
@@ -37,6 +38,7 @@ def git_push():
     out = check_output(["bash", "./script/deploy.sh"])
     print(out)
     result = {'push': 'success'}
+
     return jsonify(result), 201
 
 
@@ -47,6 +49,10 @@ def exec_commands() -> str:
         "git" : f"{check_output(['git', 'version'])}".rstrip('\n'),
         "python" : f"{check_output(['python3', '-V'])}".rstrip('\n')
     }
+
+    response.headers['X-APP-VERSION'] = '1.0.0'
+    response.headers['X-APP-BUILD-DATE'] = datetime.date.today()
+
     return jsonify(cmd_info)
 
 
