@@ -52,11 +52,14 @@ def index():
 
 
 @app.route("/api/repos/vim", methods=["GET"])
-def get_vim_latest_tag():
+def get_vim_latest_tag(num):
     """
     Get the latest tag from vim repository on GitHub.
     """
-    num = request.args.get("num", 1, type=int)
+    try:
+        num = request.args.get("num", 1, type=int)
+    except RuntimeError:
+        pass
 
     url = "https://api.github.com/repos/vim/vim/tags"
     req = urllib.request.Request(url)
@@ -110,18 +113,10 @@ def exec_commands() -> str:
     return resp
 
 
-@app.errorhandler(404)
-def page_not_found(error):
-    """
-    Error pages handler
-    """
-    return render_template("page_not_found.html"), 404
-
-
-@app.route("/callback", methods=['POST'])
+@app.route("/callback", methods=["POST"])
 def callback():
     # get X-Line-Signature header value
-    signature = request.headers['X-Line-Signature']
+    signature = request.headers["X-Line-Signature"]
 
     # get request body as text
     body = request.get_data(as_text=True)
@@ -133,14 +128,27 @@ def callback():
     except InvalidSignatureError:
         abort(400)
 
-    return 'OK'
+    return "OK"
+
+
+@app.route("/__callback/user", methods=["GET"])
+def get_users():
+    return "Metrics versions"
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    """
+    Error pages handler
+    """
+    return render_template("page_not_found.html"), 404
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.message.text))
+        event.reply_token, TextSendMessage(text="aaa")
+    )
 
 
 if __name__ == "__main__":
