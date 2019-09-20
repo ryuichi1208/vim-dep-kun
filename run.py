@@ -58,8 +58,8 @@ def get_vim_latest_tag(num: int) -> str:
     """
     try:
         num = request.args.get("num", 1, type=int)
-    except RuntimeError:
-        pass
+    except RuntimeError as e:
+        print(e)
 
     url = "https://api.github.com/repos/vim/vim/tags"
     req = urllib.request.Request(url)
