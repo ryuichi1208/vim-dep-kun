@@ -6,7 +6,7 @@ import os
 import datetime
 
 from subprocess import check_output
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify, Response, render_template
 from flask_httpauth import HTTPBasicAuth, HTTPDigestAuth
 
 app = Flask(__name__)
