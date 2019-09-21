@@ -4,6 +4,7 @@
 import datetime
 import json
 import os
+import random
 import sys
 import urllib.request
 
@@ -17,14 +18,12 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False
-app.config["SECRET_KEY"] = "aaa"
+app.config["SECRET_KEY"] = random.randint()
 auth = HTTPDigestAuth()
 ACCEPTED_IP = ["127.0.0.1", "192.168.1.1/24"]
 
-line_bot_api = LineBotApi(
-    "lkhSX1pn6kyKtrk//snn2eHR7Bsx6Owy6RxoImxpLr0vQjCixFk5qwnKlGfdmAUxLFOq4KdIqa5onNuVkrKquEnlzSAnKWvqVye66svW89MATemJGdEhDSl6HBiHbOe6Bk1D6I/d/7r9oVv2Eq8IhgdB04t89/1O/w1cDnyilFU="
-)
-handler = WebhookHandler("f00c4d7b3d94f2e3e7d53e5bfe98f0e4")
+line_bot_api = LineBotApi(os.environ["LINE_BOT_API"])
+handler = WebhookHandler(os.environ["LINE_BOT_CHANNNEL_TOKEN"])
 
 
 @auth.get_password
