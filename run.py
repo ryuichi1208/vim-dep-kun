@@ -18,7 +18,7 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False
-app.config["SECRET_KEY"] = random.randint(10, 100)
+app.config["SECRET_KEY"] = str(random.randint(10, 100))
 auth = HTTPDigestAuth()
 ACCEPTED_IP = ["127.0.0.1", "192.168.1.1/24"]
 
