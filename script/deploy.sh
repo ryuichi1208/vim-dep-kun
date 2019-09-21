@@ -4,7 +4,6 @@ GIT_CMD=$(which git)
 GIT_SCHE="https://"
 GIT_USER="ryuichi1208"
 GIT_MAIL="ryucrosskey@gmail.com"
-GIT_PASS="Abjlfhy31"
 GIT_REPO="vim-dep-kun"
 
 function git_clone()
