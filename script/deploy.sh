@@ -6,6 +6,13 @@ GIT_USER="ryuichi1208"
 GIT_MAIL="ryucrosskey@gmail.com"
 GIT_REPO="vim-dep-kun"
 
+#export QEMU_AUDIO_DRV=pa
+#QEMU_AUDIO_DRV=pa
+
+export TRIVY_AUTH_URL=https://registry.hub.docker.com
+export TRIVY_USERNAME={DOCKERHUB_USERNAME}
+export TRIVY_PASSWORD={DOCKERHUB_PASSWORD}
+
 function git_clone()
 {
   ${GIT_CMD} clone ${GIT_SCHE}${GIT_USER}:${GIT_PASS}@github.com/${GIT_USER}/${GIT_REPO}.git
@@ -54,3 +61,22 @@ function main()
 }
 
 main
+
+exit 0
+
+while [ $((min+1)) -lt $max ]
+do
+  middle=$(((min+max)/2))
+  $test_prog $middle
+  if [ $? = 0 ]
+  then
+    min=$middle
+  else
+    max=$middle
+  fi
+done
+
+
+# depth=$1
+# repeat_string '[' $depth
+# repeat_string ']' $depth
